@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "148369501195",
+    "firebase_url": "https://finanzas-d8536-default-rtdb.firebaseio.com",
+    "project_id": "finanzas-d8536",
+    "storage_bucket": "finanzas-d8536.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148369501195:android:99a19dbe57100a72e16b0e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0nj_CQsUGE4jMt1Q7chBJ33TaZRyhxJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

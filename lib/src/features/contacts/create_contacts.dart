@@ -7,7 +7,7 @@ import 'package:flutter_application_1/src/settings/app_validators.dart';
 import 'package:flutter_application_1/src/widgets/fields/inputs_text_fields.dart';
 
 class CreateContacts extends StatefulWidget {
-  CreateContacts({super.key});
+  const CreateContacts({super.key});
 
   @override
   State<CreateContacts> createState() => _StateCreateContacts();
@@ -98,22 +98,51 @@ class _StateCreateContacts extends State<CreateContacts> {
                       ),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      _userService.addUser(
-                        User(
-                          id: DateTime.now().millisecondsSinceEpoch.toString(),
-                          name: _nameController.text,
-                          email: _emailController.text,
-                          number: _numberController.text,
-                        ),
-                      );
+                      try {
+                        // Mostrar indicador de carga
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.buttonBlue,
+                            ),
+                          ),
+                        );
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Contact created successfully')),
-                      );
+                        await _userService.addUser(
+                          User(
+                            id: DateTime.now().millisecondsSinceEpoch.toString(),
+                            name: _nameController.text,
+                            email: _emailController.text,
+                            number: _numberController.text,
+                          ),
+                        );
 
-                      Navigator.pushNamed(context, '/');
+                        // Cerrar indicador de carga
+                        if (context.mounted) Navigator.pop(context);
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Contact created successfully')),
+                          );
+                          Navigator.pushNamed(context, '/');
+                        }
+                      } catch (e) {
+                        // Cerrar indicador de carga
+                        if (context.mounted) Navigator.pop(context);
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error creating contact: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
                     }
                   },
                   child: Text(

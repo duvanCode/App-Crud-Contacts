@@ -116,23 +116,52 @@ class _StateEditContact extends State<EditContact> {
                       ),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                    if (formKey.currentState!.validate()) {
-                      _userService.updateUser(User(
-                        id: widget.user.id,
-                        name: _nameController.text,
-                        email: _emailController.text,
-                        number: _numberController.text,
-                      ));
-                      
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Contact updated successfully'),
-                        ),
-                      );
+                      try {
+                        // Mostrar indicador de carga
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.buttonBlue,
+                            ),
+                          ),
+                        );
 
-                      Navigator.pushNamed(context, '/');
-                    } 
+                        await _userService.updateUser(User(
+                          id: widget.user.id,
+                          name: _nameController.text,
+                          email: _emailController.text,
+                          number: _numberController.text,
+                        ));
+
+                        // Cerrar indicador de carga
+                        if (context.mounted) Navigator.pop(context);
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Contact updated successfully'),
+                            ),
+                          );
+                          Navigator.pushNamed(context, '/');
+                        }
+                      } catch (e) {
+                        // Cerrar indicador de carga
+                        if (context.mounted) Navigator.pop(context);
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error updating contact: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    }
                   },
                   child: Text(
                     'Update',
@@ -160,14 +189,45 @@ class _StateEditContact extends State<EditContact> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    _userService.deleteUser(widget.user.id);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Contact deleted successfully'),
-                      ),
-                    );
-                    Navigator.pushNamed(context, '/');
+                  onPressed: () async {
+                    try {
+                      // Mostrar indicador de carga
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.red,
+                          ),
+                        ),
+                      );
+
+                      await _userService.deleteUser(widget.user.id);
+
+                      // Cerrar indicador de carga
+                      if (context.mounted) Navigator.pop(context);
+
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Contact deleted successfully'),
+                          ),
+                        );
+                        Navigator.pushNamed(context, '/');
+                      }
+                    } catch (e) {
+                      // Cerrar indicador de carga
+                      if (context.mounted) Navigator.pop(context);
+
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error deleting contact: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
                   },
                   child: Text(
                     'Delete',
