@@ -19,9 +19,21 @@ class _ListContactsState extends State<ListContacts> {
   final AuthService _authService = AuthService();
   String _searchQuery = '';
 
+
+
+    @override
+    void initState() {
+      super.initState();
+      _userService.getUsers();
+    }
+
+    
   @override
   Widget build(BuildContext context) {
     final currentUserEmail = _authService.currentUser?.email ?? 'Usuario';
+
+
+
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
